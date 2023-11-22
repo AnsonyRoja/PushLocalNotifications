@@ -1,6 +1,10 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:async';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+  late Timer _timer;
+
+
 
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -18,10 +22,16 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         );
 
         await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  
 
-
-
+      _startTimer();
     } 
+
+      void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      mostrarNotificacion();
+    });
+  }
 
 
 Future<void> mostrarNotificacion() async {
@@ -32,12 +42,14 @@ Future<void> mostrarNotificacion() async {
     importance: Importance.max,
     priority: Priority.high,
     showWhen: false,
+    sound: RawResourceAndroidNotificationSound('mi_sonido'),
+    playSound: true,
   );
   // Esto es para iOS
   const darwinNotifaicationDetails = DarwinNotificationDetails();
 
 
-    
+
 
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
@@ -46,6 +58,7 @@ Future<void> mostrarNotificacion() async {
     'Hola',
     'Mundo',
     platformChannelSpecifics,
-    payload: 'Default_Sound',
-  );
+    payload: 'Custom_Sound',
+    
+      );
 }
